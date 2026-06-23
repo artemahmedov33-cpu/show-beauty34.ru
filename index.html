@@ -622,20 +622,22 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
     }
   }
 
-  /* Silver constellation background reacting to cursor */
+  /* Silver constellation background reacting to cursor
+     (оптимизировано: квадраты расстояний вместо Math.hypot, пауза в фоновой вкладке, prefers-reduced-motion) */
   (function(){
     var canvas=document.getElementById('constellation'); if(!canvas) return;
     var ctx=canvas.getContext('2d');
     var DPR=Math.min(window.devicePixelRatio||1,2);
     var W,H,particles=[],raf;
     var mouse={x:-9999,y:-9999,active:false};
-    var COUNT, LINK=150, MR=190, REPEL=80;
+    var COUNT, LINK=150, MR=190, REPEL=80, LINK2=LINK*LINK, MR2=MR*MR;
+    var running=!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
     function resize(){
       W=innerWidth;H=innerHeight;
       canvas.style.width=W+'px';canvas.style.height=H+'px';
       canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);
       ctx.setTransform(DPR,0,0,DPR,0,0);
-      COUNT=Math.min(140,Math.round(W*H/11000));build();
+      COUNT=Math.min(100,Math.round(W*H/13000));build();
     }
     function build(){particles=[];for(var i=0;i<COUNT;i++){particles.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4,r:Math.random()*1.8+1.1});}}
     addEventListener('resize',resize,{passive:true});
@@ -651,19 +653,19 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
       ctx.clearRect(0,0,W,H);
       for(var i=0;i<particles.length;i++){
         var p=particles[i];
-        if(mouse.active){var dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);if(d<MR&&d>0.01){var f=(MR-d)/MR;p.x+=(dx/d)*f*REPEL*0.06;p.y+=(dy/d)*f*REPEL*0.06;}}
+        if(mouse.active){var dx=p.x-mouse.x,dy=p.y-mouse.y,d2=dx*dx+dy*dy;if(d2<MR2&&d2>0.0001){var d=Math.sqrt(d2),f=(MR-d)/MR;p.x+=(dx/d)*f*REPEL*0.06;p.y+=(dy/d)*f*REPEL*0.06;}}
         p.x+=p.vx;p.y+=p.vy;
         if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
         p.x=Math.max(0,Math.min(W,p.x));p.y=Math.max(0,Math.min(H,p.y));
         ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fillStyle='rgba(220,226,236,0.85)';ctx.fill();
       }
       for(var a=0;a<particles.length;a++){for(var b=a+1;b<particles.length;b++){
-        var pa=particles[a],pb=particles[b],ddx=pa.x-pb.x,ddy=pa.y-pb.y,dist=Math.hypot(ddx,ddy);
-        if(dist<LINK){var al=(1-dist/LINK)*0.38;ctx.strokeStyle='rgba(200,206,216,'+al+')';ctx.lineWidth=0.7;ctx.beginPath();ctx.moveTo(pa.x,pa.y);ctx.lineTo(pb.x,pb.y);ctx.stroke();}
+        var pa=particles[a],pb=particles[b],ddx=pa.x-pb.x,ddy=pa.y-pb.y,dd2=ddx*ddx+ddy*ddy;
+        if(dd2<LINK2){var dist=Math.sqrt(dd2),al=(1-dist/LINK)*0.38;ctx.strokeStyle='rgba(200,206,216,'+al+')';ctx.lineWidth=0.7;ctx.beginPath();ctx.moveTo(pa.x,pa.y);ctx.lineTo(pb.x,pb.y);ctx.stroke();}
       }}
       if(mouse.active){
-        for(var k=0;k<particles.length;k++){var pk=particles[k],mdx=pk.x-mouse.x,mdy=pk.y-mouse.y,md=Math.hypot(mdx,mdy);
-          if(md<MR){var ma=(1-md/MR)*0.7;ctx.strokeStyle='rgba(238,241,246,'+ma+')';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(mouse.x,mouse.y);ctx.lineTo(pk.x,pk.y);ctx.stroke();}}
+        for(var k=0;k<particles.length;k++){var pk=particles[k],mdx=pk.x-mouse.x,mdy=pk.y-mouse.y,md2=mdx*mdx+mdy*mdy;
+          if(md2<MR2){var md=Math.sqrt(md2),ma=(1-md/MR)*0.7;ctx.strokeStyle='rgba(238,241,246,'+ma+')';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(mouse.x,mouse.y);ctx.lineTo(pk.x,pk.y);ctx.stroke();}}
         ctx.beginPath();ctx.arc(mouse.x,mouse.y,2.5,0,6.283);ctx.fillStyle='rgba(238,241,246,0.9)';ctx.fill();
       }
       /* Рябь по касанию (тач-устройства) */
@@ -677,8 +679,12 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
         for(var pr=0;pr<particles.length;pr++){var P=particles[pr],ex=P.x-rp.x,ey=P.y-rp.y,ed=Math.hypot(ex,ey);
           if(Math.abs(ed-rp.r)<26){var la=(1-rp.r/420);if(la>0){ctx.strokeStyle='rgba(238,241,246,'+(la*rp.a*0.6)+')';ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(rp.x,rp.y);ctx.lineTo(P.x,P.y);ctx.stroke();}}}
       }
-      raf=requestAnimationFrame(step);
+      if(running) raf=requestAnimationFrame(step);
     }
+    document.addEventListener('visibilitychange',function(){
+      if(document.hidden){if(raf){cancelAnimationFrame(raf);raf=0;}}
+      else if(running&&!raf){raf=requestAnimationFrame(step);}
+    });
     resize();step();
   })();
 
