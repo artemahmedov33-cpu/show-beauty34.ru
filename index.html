@@ -65,7 +65,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(12,12,14,
 .hv-badge small{font-size:11px;color:var(--muted);letter-spacing:1px}
 
 .marquee{background:linear-gradient(90deg,var(--silver-bright),var(--steel));color:#0C0C0E;overflow:hidden;padding:16px 0}
-.marquee-track{display:flex;gap:50px;white-space:nowrap;animation:scrollx 22s linear infinite;font-family:'Playfair Display',serif;font-size:22px;font-style:italic;width:max-content}
+.marquee-track{display:flex;gap:50px;white-space:nowrap;animation:scrollx 60s linear infinite;font-family:'Playfair Display',serif;font-size:22px;font-style:italic;width:max-content}
 .marquee-track span{display:flex;align-items:center;gap:50px}
 .marquee-track span::after{content:'✦';font-style:normal}
 @keyframes scrollx{to{transform:translateX(-50%)}}
@@ -143,16 +143,16 @@ footer{background:#070708;color:#9298A2;padding:80px 0 40px;border-top:1px solid
 
 .reveal{opacity:0;transform:translateY(40px);transition:.9s cubic-bezier(.16,1,.3,1)}
 .reveal.in{opacity:1;transform:none}
-@media(max-width:980px){.menu,.head-cta .btn-out{display:none}.hero-grid{grid-template-columns:1fr}.hero-visual{height:380px;margin-top:30px}.hero h1{font-size:54px}.sec-head h2{font-size:38px}.adv-grid{grid-template-columns:1fr}.serv-row{grid-template-columns:1fr;gap:14px}.serv-right{opacity:1;transform:none}.foot-grid{grid-template-columns:1fr}.cta-banner{padding:44px 26px}.serv-name{font-size:30px}}
+@media(max-width:980px){.menu,.head-cta .btn-out{display:none}.hero-grid{grid-template-columns:1fr}.hero-visual{height:380px;margin-top:30px}.hero h1{font-size:54px}.sec-head h2{font-size:38px}.adv-grid{grid-template-columns:1fr}.serv-row{grid-template-columns:1fr;gap:14px}.foot-grid{grid-template-columns:1fr}.cta-banner{padding:44px 26px}.serv-name{font-size:30px}}
 </style><style>
 #team{padding-bottom:90px}
 .tm-group{margin-bottom:64px}
 .tm-grouphead{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
 .tm-grouphead h3{font-size:26px;font-weight:800;color:var(--silver-bright)}
 .tm-nav{display:flex;gap:10px}
-.tm-arrow{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--silver);font-size:24px;line-height:1;cursor:none;transition:.3s;display:flex;align-items:center;justify-content:center}
-.tm-arrow:hover{background:var(--silver);color:#0C0C0E;border-color:var(--silver);transform:translateY(-2px)}
-.tm-arrow:disabled{opacity:.3;pointer-events:none}
+.tm-arrow{width:52px;height:52px;border-radius:50%;border:1.5px solid rgba(208,214,224,.65);background:linear-gradient(180deg,rgba(200,205,214,.20),rgba(200,205,214,.08));color:var(--silver-bright);font-size:28px;font-weight:700;line-height:1;cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(0,0,0,.5),inset 0 0 0 1px rgba(238,241,246,.08)}
+.tm-arrow:hover{background:var(--silver-bright);color:#0C0C0E;border-color:var(--silver-bright);transform:translateY(-2px);box-shadow:0 8px 22px -6px rgba(238,241,246,.5)}
+.tm-arrow:disabled{opacity:.32;pointer-events:none}
 .tm-track-wrap{position:relative}
 .tm-track{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:6px 32px;scrollbar-width:none;-ms-overflow-style:none}
 .tm-track::-webkit-scrollbar{display:none;height:0;width:0}
@@ -169,7 +169,7 @@ footer{background:#070708;color:#9298A2;padding:80px 0 40px;border-top:1px solid
 .tm-card:hover .tm-inner{transform:none}
 .tm-name-static{text-align:center;margin-top:14px;font-family:'Playfair Display',serif;font-size:19px;color:var(--silver);transition:.4s}
 .tm-card:hover .tm-name-static{color:var(--silver-bright)}
-.tm-swipe{text-align:center;color:var(--steel);font-size:13px;letter-spacing:1px;margin-top:14px;animation:swipepulse 2s ease-in-out infinite}
+.tm-swipe{text-align:center;color:var(--silver);font-size:26px;letter-spacing:1px;margin-top:14px;animation:swipepulse 2s ease-in-out infinite}
 @keyframes swipepulse{0%,100%{opacity:.5;transform:translateX(0)}50%{opacity:1;transform:translateX(6px)}}
 @media(max-width:980px){
   .tm-grouphead{padding:0 20px}.tm-grouphead h3{font-size:20px}
@@ -216,24 +216,47 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
 @media(hover:none){.cur-ring,.cur-dot{display:none !important;}body{cursor:auto !important;}}</style>
 <style id="responsive-fixes">
   /* ===== Бургер-меню ===== */
-  .nav-toggle{display:none;width:46px;height:46px;flex:0 0 auto;flex-direction:column;align-items:center;justify-content:center;gap:5px;
-    background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-  .nav-toggle span{display:block;width:20px;height:2px;background:var(--silver-bright);border-radius:2px;transition:transform .3s ease,opacity .25s ease;}
+  /* Жёсткая блокировка горизонтального сдвига страницы на телефоне */
+  html,body{overflow-x:hidden;}
+  html{overscroll-behavior-x:none;}
+  body{position:relative;width:100%;max-width:100%;overscroll-behavior-x:none;}
+
+  /* Бургер — заметный, не сливается с фоном */
+  .nav-toggle{display:none;width:48px;height:48px;flex:0 0 auto;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+    background:rgba(28,28,33,.95);border:1px solid rgba(208,214,224,.45);border-radius:12px;padding:0;cursor:pointer;
+    box-shadow:0 2px 12px rgba(0,0,0,.5);-webkit-tap-highlight-color:transparent;}
+  .nav-toggle span{display:block;width:22px;height:2px;background:var(--silver-bright);border-radius:2px;transition:transform .3s ease,opacity .25s ease;}
   .nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
   .nav-toggle.open span:nth-child(2){opacity:0;}
   .nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
+  @media(max-width:980px){ .nav-toggle{display:flex;} }
+  /* Мобильное меню строится скриптом как оверлей на уровне <body> (не заперт в header) */
+  #mobileNav{position:fixed !important;inset:0 !important;z-index:9000 !important;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;gap:4px;background:#0C0C0E;
+    padding:88px 26px 36px;opacity:0;visibility:hidden;transform:translateY(-8px);
+    transition:opacity .35s ease,transform .42s cubic-bezier(.16,1,.3,1),visibility .35s;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  #mobileNav.open{opacity:1;visibility:visible;transform:none;}
+  #mobileNav a{width:100%;max-width:420px;text-align:center;text-decoration:none;
+    padding:17px 4px;font-size:21px;font-weight:700;letter-spacing:1px;color:var(--silver-bright);
+    border-bottom:1px solid rgba(208,214,224,.10);}
+  #mobileNav .mn-cta{margin-top:26px;border-bottom:none;color:#0C0C0E;border-radius:40px;padding:16px 26px;font-size:15px;}
+  #mobileNav .mn-close{position:absolute;top:16px;right:16px;width:48px;height:48px;border-radius:12px;
+    border:1px solid rgba(208,214,224,.4);background:rgba(28,28,33,.95);color:#EEF1F6;font-size:30px;
+    line-height:1;cursor:pointer;padding:0;font-weight:300;}
+  .menu-cta{display:none;}
+
+  /* ===== Услуги-аккордеон на мобильных: тап раскрывает описание ===== */
   @media(max-width:980px){
-    .nav-toggle{display:flex;}
-    .menu{display:flex !important;position:fixed;top:78px;left:0;right:0;z-index:95;
-      flex-direction:column;align-items:stretch;gap:0;
-      background:rgba(12,12,14,.98);backdrop-filter:blur(14px);
-      padding:8px 24px 18px;border-bottom:1px solid var(--line);
-      transform:translateY(-135%);transition:transform .42s cubic-bezier(.16,1,.3,1);
-      max-height:calc(100dvh - 78px);overflow-y:auto;}
-    .menu.open{transform:none;}
-    .menu a{width:100%;padding:15px 4px;font-size:16px;letter-spacing:1px;border-bottom:1px solid rgba(208,214,224,.07);}
-    .menu a::after{display:none !important;}
+    .serv-row{cursor:pointer;}
+    .serv-right{max-height:0;opacity:0;overflow:hidden;transform:none;margin:0;
+      transition:max-height .5s cubic-bezier(.16,1,.3,1),opacity .4s ease,margin .35s ease;}
+    .serv-row.open .serv-right{max-height:260px;opacity:1;margin-top:12px;}
+    .serv-row.open .serv-name{color:var(--silver-bright);}
+    .serv-row.open .serv-plus{transform:rotate(135deg);color:var(--silver-bright);}
+    .serv-row:hover{padding:38px 12px;background:transparent;}   /* отключаем hover-эффект на тач */
+    .serv-row:hover .serv-name{transform:none;}
   }
 
   /* ===== Планшеты / узкие ===== */
@@ -247,10 +270,8 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
   /* ===== Телефоны ===== */
   @media(max-width:600px){
     .container{padding:0 18px;}
-    .head-cta .phone{display:none;}            /* номер дублируется в футере и реквизитах */
-    .head-cta .btn{padding:11px 18px;font-size:12px;}
+    .head-cta{display:none;}                    /* на телефоне в шапке только лого + бургер; запись — в меню/hero */
     .logo{font-size:18px;letter-spacing:1px;gap:9px;}
-    .menu{top:78px;}
     .hero h1{font-size:42px;}
     .hero .lead{font-size:16px;}
     .hero-actions{flex-direction:column;align-items:stretch;}
@@ -339,19 +360,35 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
   @media (pointer:coarse){
     .adv-card:active,.tm-card:active,.serv-row:active{transform:scale(.985);transition:transform .15s ease;}
   }
+</style>
+<style id="compact-spacing">
+  /* Убираем пустые промежутки между блоками */
+  #about{padding-top:52px !important;padding-bottom:34px !important;}
+  #adv,#services,#team,section{padding-top:40px !important;padding-bottom:40px !important;}
+  #team{padding-bottom:32px !important;}
+  #contacts{padding-top:40px !important;padding-bottom:26px !important;}
+  .sec-head{margin-bottom:30px !important;}
+  .tm-group{margin-bottom:32px !important;}
+  .marquee{margin:0 !important;}
+  @media(max-width:768px){
+    #about{padding-top:32px !important;padding-bottom:24px !important;}
+    #adv,#services,#team,section{padding-top:26px !important;padding-bottom:26px !important;}
+    #contacts{padding-top:28px !important;padding-bottom:20px !important;}
+    .sec-head{margin-bottom:22px !important;}
+  }
 </style><style id="legal-modal-style">
-  .legal-modal{position:fixed;inset:0;z-index:1000;display:none;background:rgba(8,8,10,.86);backdrop-filter:blur(8px);overflow-y:auto;padding:40px 16px;}
+  .legal-modal{position:fixed !important;inset:0 !important;z-index:10000 !important;display:none;background:rgba(8,8,10,.9);backdrop-filter:blur(8px);overflow-y:auto;padding:40px 16px;-webkit-overflow-scrolling:touch;}
   .legal-modal.open{display:block;}
   .legal-modal-inner{max-width:820px;margin:0 auto;background:linear-gradient(160deg,#0C0C0E,#141417);border:1px solid rgba(208,214,224,.14);border-radius:20px;padding:38px 32px 40px;position:relative;box-shadow:0 30px 80px -20px rgba(0,0,0,.85);}
   .legal-close{position:absolute;top:16px;right:16px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(208,214,224,.22);background:#1A1A1E;color:#EEF1F6;font-size:22px;line-height:1;cursor:pointer;z-index:2;transition:.3s;}
   .legal-close:hover{background:#C8CDD6;color:#0C0C0E;}
-  .legal-modal h1{font-family:'Playfair Display',Georgia,serif;font-size:28px;color:#EEF1F6;margin:0 40px 8px 0;font-weight:800;}
+  .legal-modal h1{font-family:'Playfair Display',Georgia,serif;font-size:26px;color:#EEF1F6;margin:0 40px 8px 0;font-weight:800;}
   .legal-modal .legal-sub{color:#9AA1AD;font-size:13px;margin-bottom:20px;}
-  .legal-modal h2{font-size:18px;color:#C8CDD6;margin:26px 0 9px;}
-  .legal-modal h3{font-size:15px;color:#9AA1AD;margin:16px 0 7px;font-weight:700;}
-  .legal-modal p{color:#9298A2;margin-bottom:11px;font-size:14px;line-height:1.7;}
+  .legal-modal h2{font-size:17px;color:#C8CDD6;margin:24px 0 9px;}
+  .legal-modal h3{font-size:14px;color:#9AA1AD;margin:16px 0 7px;font-weight:700;}
+  .legal-modal p{color:#9298A2;margin-bottom:11px;font-size:13.5px;line-height:1.7;}
   .legal-modal ul{margin:0 0 13px 4px;list-style:none;}
-  .legal-modal li{color:#9298A2;font-size:14px;margin-bottom:6px;padding-left:18px;position:relative;line-height:1.65;}
+  .legal-modal li{color:#9298A2;font-size:13.5px;margin-bottom:6px;padding-left:18px;position:relative;line-height:1.6;}
   .legal-modal li::before{content:'4';position:absolute;left:0;color:#9AA1AD;}
   .legal-modal a{color:#EEF1F6;word-break:break-word;}
   .legal-modal .legal-foot{margin-top:34px;padding-top:18px;border-top:1px solid rgba(208,214,224,.14);color:#9AA1AD;font-size:12px;}
@@ -361,7 +398,7 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
 <div class="cur-ring hover" id="curRing" style=""></div><div class="cur-dot hover" id="curDot" style="transform: translate(480px, 636px) translate(-50%, -50%); display: none;"></div>
 <header class="scrolled"><div class="container nav">
 <div class="logo"><div class="mark serif" style="width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; padding: 0px;"><img src="images/logo.png" alt="SHOW beauty" class="logo-img" style="width: 52px; height: 52px; object-fit: contain; display: block; border-radius: 50%;"></div><div>SHOW<span class="sub">BEAUTY STUDIO</span></div></div>
-<nav class="menu"><a href="#about">О нас</a><a href="#adv">Преимущества</a><a href="#services">Услуги</a><a href="#team">Команда</a><a href="#contacts">Контакты</a></nav>
+<nav class="menu"><a href="#about">О нас</a><a href="#adv">Преимущества</a><a href="#services">Услуги</a><a href="#team">Команда</a><a href="#contacts">Контакты</a><a class="btn btn-fill menu-cta" href="https://n902705.yclients.com/company/840983/personal/select-services?o=" target="_blank" rel="noopener">Записаться онлайн</a></nav>
 <div class="head-cta"><span class="phone">+7 (969) 285 02 25</span><a class="btn btn-fill" href="https://n902705.yclients.com/company/840983/personal/select-services?o=" target="_blank" rel="noopener">Онлайн-запись</a></div>
 <button class="nav-toggle" id="navToggle" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span><span></span></button>
 </div></header>
@@ -375,7 +412,7 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
 <div class="hv-badge"><b>300+</b><small>ОТТЕНКОВ</small></div></div>
 </div></section>
 
-<div class="marquee"><div class="marquee-track"><span>Маникюр</span><span>Педикюр</span><span>Наращивание ресниц</span><span>Ламинирование</span><span>Брови</span><span>Архитектура</span><span>Маникюр</span><span>Педикюр</span><span>Наращивание ресниц</span><span>Ламинирование</span><span>Брови</span><span>Архитектура</span></div></div>
+<div class="marquee"><div class="marquee-track"><span>Маникюр</span><span>Педикюр</span><span>Наращивание ресниц</span><span>Ламинирование</span><span>Брови</span><span>Архитектура</span><span>Маникюр</span><span>Педикюр</span><span>Наращивание ресниц</span><span>Ламинирование</span><span>Брови</span><span>Архитектура</span><span>Маникюр</span><span>Педикюр</span><span>Наращивание ресниц</span><span>Ламинирование</span><span>Брови</span><span>Архитектура</span><span>Маникюр</span><span>Педикюр</span><span>Наращивание ресниц</span><span>Ламинирование</span><span>Брови</span><span>Архитектура</span><span>Маникюр</span><span>Педикюр</span><span>Наращивание ресниц</span><span>Ламинирование</span><span>Брови</span><span>Архитектура</span><span>Маникюр</span><span>Педикюр</span><span>Наращивание ресниц</span><span>Ламинирование</span><span>Брови</span><span>Архитектура</span></div></div>
 
 <section id="adv"><div class="container"><div class="sec-head reveal in" style="transition-delay: 0.08s;"><div class="divider-ico">✦</div><span class="sec-tag">почему мы</span><h2 class="serif">Создаём <em>комфорт</em><br>в каждой детали</h2></div>
 <div class="adv-grid">
@@ -387,7 +424,7 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
 <div class="adv-card reveal in" style="transition-delay: 0.08s;"><div class="adv-photo"><img class="adv-img" src="images/shades.jpg" alt="Более 300 оттенков" loading="lazy"></div><h3>Более 300 оттенков</h3><p>Огромная палитра для вашего идеального маникюра — от классики до самых модных трендов.</p></div>
 </div></div></section>
 
-<section class="services" id="services"><div class="container"><div class="sec-head reveal in" style="transition-delay: 0.16s;"><div class="divider-ico">✦</div><span class="sec-tag">наши услуги</span><h2 class="serif">Полный спектр <em>beauty</em>-ухода</h2><p>Наведите на услугу — справа появится подробное описание</p></div>
+<section class="services" id="services"><div class="container"><div class="sec-head reveal in" style="transition-delay: 0.16s;"><div class="divider-ico">✦</div><span class="sec-tag">наши услуги</span><h2 class="serif">Полный спектр <em>beauty</em>-ухода</h2><p>Маникюр, педикюр, брови и ресницы — полный уход в одной студии</p></div>
 <div class="serv-list2 reveal in" style="transition-delay: 0s;">
   <div class="serv-row" data-i="0">
     <div class="serv-left"><span class="serv-num">01</span><h3 class="serif serv-name">Маникюр</h3><span class="serv-plus">+</span></div>
@@ -408,7 +445,7 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
 </div></section>
 
 <section id="team">
-  <div class="container"><div class="sec-head reveal in" style=""><div class="divider-ico">✦</div><span class="sec-tag">наша команда</span><h2 class="serif">Мастера, которым <em>доверяют</em></h2><p>Наведите на мастера — появится имя и специализация. Листайте вправо, чтобы увидеть всех.</p></div></div>
+  <div class="container"><div class="sec-head reveal in" style=""><div class="divider-ico">✦</div><span class="sec-tag">наша команда</span><h2 class="serif">Мастера, которым <em>доверяют</em></h2></div></div>
   
   <div class="tm-group">
     <div class="container tm-grouphead">
@@ -561,7 +598,7 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
     <a href="#" data-legal="oferta">Публичная оферта</a>
   </p>
 </div>
-<div class="foot-bottom"><span>© 2026 SHOW beauty · Студия красоты</span><span><a href="#" data-legal="politic">Политика конфиденциальности</a> · <a href="#" data-legal="oferta">Публичная оферта</a></span></div></div></footer>
+<div class="foot-bottom"><span>© 2026 SHOW beauty · Студия красоты</span></div></div></footer>
 <script id="show-runtime">
 (function(){
   'use strict';
@@ -730,18 +767,54 @@ transition:width .22s ease,height .22s ease,border-color .22s ease,box-shadow .2
 </script>
 <script id="responsive-runtime">
 (function(){
-  var t=document.getElementById('navToggle'), m=document.querySelector('.menu');
-  if(!t||!m) return;
+  var toggle=document.getElementById('navToggle');
+  var srcMenu=document.querySelector('.menu');
+  if(!toggle||!srcMenu) return;
+  /* строим оверлей-меню как прямого потомка body */
+  var nav=document.createElement('div'); nav.id='mobileNav';
+  var close=document.createElement('button'); close.className='mn-close'; close.setAttribute('aria-label','Закрыть'); close.innerHTML='&times;';
+  nav.appendChild(close);
+  srcMenu.querySelectorAll('a').forEach(function(a){
+    var l=document.createElement('a');
+    l.setAttribute('href',a.getAttribute('href'));
+    if(a.target){l.target=a.target;} if(a.rel){l.rel=a.rel;}
+    l.textContent=a.textContent.trim();
+    if(a.classList.contains('menu-cta')) l.className='btn btn-fill mn-cta';
+    nav.appendChild(l);
+  });
+  document.body.appendChild(nav);
   function setOpen(o){
-    t.classList.toggle('open',o); m.classList.toggle('open',o);
-    t.setAttribute('aria-expanded',o?'true':'false');
+    nav.classList.toggle('open',o); toggle.classList.toggle('open',o);
+    toggle.setAttribute('aria-expanded',o?'true':'false');
+    document.body.style.overflow=o?'hidden':'';
   }
-  t.addEventListener('click',function(){ setOpen(!t.classList.contains('open')); });
-  m.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setOpen(false); }); });
-  /* закрыть меню при возврате на десктоп */
+  toggle.addEventListener('click',function(){ setOpen(!nav.classList.contains('open')); });
+  close.addEventListener('click',function(){ setOpen(false); });
+  nav.querySelectorAll('a').forEach(function(l){
+    l.addEventListener('click',function(e){
+      var href=l.getAttribute('href');
+      setOpen(false);
+      if(href && href.charAt(0)==='#' && href.length>1){
+        e.preventDefault();
+        var tgt=document.querySelector(href);
+        if(tgt) setTimeout(function(){ tgt.scrollIntoView({behavior:'smooth',block:'start'}); },280);
+      }
+    });
+  });
   if(window.matchMedia){
     window.matchMedia('(min-width:981px)').addEventListener('change',function(e){ if(e.matches) setOpen(false); });
   }
+})();
+/* Аккордеон услуг на мобильных: тап по строке раскрывает описание */
+(function(){
+  var mq=window.matchMedia('(max-width:980px)');
+  document.querySelectorAll('.serv-row').forEach(function(r){
+    r.addEventListener('click',function(e){
+      if(!mq.matches) return;            /* на десктопе остаётся hover */
+      if(e.target.closest('a')) return;  /* не мешаем ссылкам */
+      r.classList.toggle('open');
+    });
+  });
 })();
 </script>
 <div class="legal-modal" id="m-politic" role="dialog" aria-modal="true"><div class="legal-modal-inner"><button class="legal-close" data-close aria-label="Закрыть">&times;</button><h1>Политика в отношении обработки персональных данных</h1>
